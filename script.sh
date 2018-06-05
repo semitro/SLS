@@ -13,6 +13,19 @@ function printCurrentDirectoryName {
 	echo `pwd | gawk -F '/' ' {print $NF}'`
 }
 
+function printCurrentTime {
+	date +'%a %b %d %I:%M %Z %Y'
+}
+
+function changeDirectory {
+	echo "where would you like to go? deeper?"
+	read local new_dir
+	if [ new_dir ] 
+	then
+		cd '/'
+		exec bash
+	fi
+}
 
 function mainLoop {
 	printMenu
@@ -21,9 +34,9 @@ function mainLoop {
 		case $chosen_menu in 
 		1) printCurrentDirectoryName
 			;;
-		2) echo '2' 
+		2) changeDirectory
 			;;
-		*) echo "enter correct value"
+		*) printCurrentTime
 			;;
        		esac	
 	printMenu
