@@ -16,7 +16,8 @@ function printCurrentDirectoryName {
 }
 
 function printCurrentTime {
-	date +'%a %b %d %I:%M %Z %Y'
+	export LANG=en
+	date +'%a %b %-d %I:%M %Z %Y'
 }
 
 function changeDirectory {
