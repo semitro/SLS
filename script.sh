@@ -16,8 +16,10 @@ function printCurrentDirectoryName {
 
 function mainLoop {
 	printMenu
+	while read chosen_menu 
+	do
+	printMenu
 	echo "Choose the option"
-	read chosen_menu
 	case $chosen_menu in 
 	1) echo '1' 
 		;;
@@ -26,6 +28,7 @@ function mainLoop {
 	*) echo "enter correct value"
 		;;
         esac	
+	done
 }
 
 mainLoop
