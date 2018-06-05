@@ -18,16 +18,16 @@ function mainLoop {
 	printMenu
 	while read chosen_menu 
 	do
+		case $chosen_menu in 
+		1) printCurrentDirectoryName
+			;;
+		2) echo '2' 
+			;;
+		*) echo "enter correct value"
+			;;
+       		esac	
 	printMenu
 	echo "Choose the option"
-	case $chosen_menu in 
-	1) echo '1' 
-		;;
-	2) echo '2' 
-		;;
-	*) echo "enter correct value"
-		;;
-        esac	
 	done
 }
 
