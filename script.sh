@@ -29,7 +29,7 @@ function changeDirectory {
 }
 
 function out_file() {
-	content=$(cat "$1" 2>~/lab1_err)
+	content=$(cat -- "$1" 2>>~/lab1_err)
 	if [ $? -eq 0 ]
 	    then echo "$content"
 		else
@@ -38,8 +38,12 @@ function out_file() {
 }
 
 function copy_file {
-	src = $1
-	dst = $2
+	$(cp -- $1 $2 2>>~/lab1_err)
+	if [ $? -ne 0 ]
+	then
+		echo "An error has occured during copying"
+	fi
+	
 }
 
 function mainLoop {
@@ -51,7 +55,7 @@ function mainLoop {
 			;;
 		2) echo "where would you like to go? deeper?"
 			read file_name
-			if [ file_name ]
+			if [ -n "$file_name" ]
 			then
 		       		changeDirectory $file_name
 			fi
@@ -60,14 +64,22 @@ function mainLoop {
 			;;
 		4) echo "which file to you want to examine?"
 			read file_name
-			if [ file_name ]
+			if [ -n "$file_name" ]
 			then
 				out_file $file_name
 			fi
 			;;
-		5) echo "copy file:"
+		5) echo "which file do you want to copy?"
 			read copy_src
-			#if [ copy_src ]
+			if [ -n "$copy_src" ]
+			then
+				echo "where do you want to lay it?"
+				read copy_dst
+				if [ -n "$copy_dst" ]
+				then
+					copy_file $copy_src $copy_dst
+				fi
+			fi
 			;;
 		6) break
 			;;
