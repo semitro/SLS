@@ -1,5 +1,7 @@
 #!/bin/bash
 
+error_file="~/lab7errors.log"
+
 function printMenu {
 	echo '1 - print name of current directory
 2 - change current directory
@@ -18,18 +20,21 @@ function printCurrentTime {
 }
 
 function changeDirectory {
-	echo "where would you like to go? deeper?"
-	read local new_dir
-	if [ new_dir ] 
+	cd  "$1" 2>~/lab7errors.log
+	if [ $? -ne 0 ]
 	then
-		cd '/'
-		exec bash
+	echo "An error has occured"
 	fi
 }
 
-function out_file {
-	echo $0
-	cat "$0"
+function out_file() {
+	content=$(cat "$1" 2>~/lab7errors.log)
+	if [ $? -eq 0 ]
+	    then echo "$content"
+		else
+			echo "An error has occured during file outing"
+	    fi	    
+	echo "$content"
 }
 
 function mainLoop {
@@ -39,12 +44,17 @@ function mainLoop {
 		case $chosen_menu in 
 		1) printCurrentDirectoryName
 			;;
-		2) changeDirectory
+		2) echo "where would you like to go? deeper?"
+			read file_name
+			if [ file_name ]
+			then
+		       		changeDirectory $file_name
+			fi
 			;;
 		3) printCurrentTime
 			;;
 		4) echo "which file to you want to examine?"
-			read local file_name
+			read file_name
 			if [ file_name ]
 			then
 				out_file $file_name
