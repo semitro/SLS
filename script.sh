@@ -1,6 +1,6 @@
 #!/bin/bash
 
-error_file="~/lab7errors.log"
+error_file="~lab1_err"
 
 function printMenu {
 	echo '1 - print name of current directory
@@ -20,21 +20,26 @@ function printCurrentTime {
 }
 
 function changeDirectory {
-	cd  "$1" 2>~/lab7errors.log
+	( cd -- "$1" 2>> ~/lab1_err)
 	if [ $? -ne 0 ]
 	then
-	echo "An error has occured"
+	echo "An error has occured" 1>&2
 	fi
 }
 
 function out_file() {
-	content=$(cat "$1" 2>~/lab7errors.log)
+	content=$(cat "$1" 2>~/lab1_err)
 	if [ $? -eq 0 ]
 	    then echo "$content"
 		else
 			echo "An error has occured during file outing"
 	    fi	    
 	echo "$content"
+}
+
+function copy_file {
+	src = $1
+	dst = $2
 }
 
 function mainLoop {
@@ -60,6 +65,12 @@ function mainLoop {
 				out_file $file_name
 			fi
 			;;
+		5) echo "copy file:"
+			read copy_src
+			#if [ copy_src ]
+			;;
+		6) break
+			;;
 		*) echo "Enter correct value" 
 			;;
        		esac	
@@ -69,3 +80,4 @@ function mainLoop {
 }
 
 mainLoop
+
