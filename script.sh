@@ -21,7 +21,7 @@ function printCurrentTime {
 }
 
 function changeDirectory {
-	( cd -- "$1" 2>> ~/lab1_err)
+	cd -- "$1" 2>> ~/lab1_err
 	if [ $? -ne 0 ]
 	then
 	echo "An error has occured" 1>&2
@@ -35,7 +35,6 @@ function out_file() {
 		else
 			echo "An error has occured during file outing"
 	    fi	    
-	echo "$content"
 }
 
 function copy_file {
@@ -71,6 +70,8 @@ function mainLoop {
 			#if [ copy_src ]
 			;;
 		6) break
+			;;
+		7|"ls") ls
 			;;
 		*) echo "Enter correct value" 
 			;;
