@@ -1,7 +1,11 @@
 #!/bin/bash
 
-error_file="~lab1_err"
+function catch_kill {
+	echo "The mafia was killed"
+	exit 0
+}
 
+trap  "catch_kill" SIGINT
 function printMenu {
 	echo '1 - print name of current directory
 2 - change current directory
@@ -94,4 +98,3 @@ function mainLoop {
 }
 
 mainLoop
-
