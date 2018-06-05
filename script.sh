@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function printMenu {
 	echo '1 - print name of current directory
 2 - change current directory
@@ -6,8 +8,24 @@ function printMenu {
 5 - copy file
 6 - exit'
 }
-function printCurrentDirectoryName(){
+
+function printCurrentDirectoryName {
 	echo `pwd | gawk -F '/' ' {print $NF}'`
 }
 
-printMenu
+
+function mainLoop {
+	printMenu
+	echo "Choose the option"
+	read chosen_menu
+	case $chosen_menu in 
+	1) echo '1' 
+		;;
+	2) echo '2' 
+		;;
+	*) echo "enter correct value"
+		;;
+        esac	
+}
+
+mainLoop
