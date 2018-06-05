@@ -27,6 +27,11 @@ function changeDirectory {
 	fi
 }
 
+function out_file {
+	echo $0
+	cat "$0"
+}
+
 function mainLoop {
 	printMenu
 	while read chosen_menu 
@@ -36,7 +41,16 @@ function mainLoop {
 			;;
 		2) changeDirectory
 			;;
-		*) printCurrentTime
+		3) printCurrentTime
+			;;
+		4) echo "which file to you want to examine?"
+			read local file_name
+			if [ file_name ]
+			then
+				out_file $file_name
+			fi
+			;;
+		*) echo "Enter correct value" 
 			;;
        		esac	
 	printMenu
