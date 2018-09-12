@@ -40,6 +40,9 @@ createFile(){
 		return
 	fi
 	touch -- "$1" 2>> ~/lab1_err 
+	if [ -n $? ]; then
+		echo "Eroor" 1>&2
+	fi
 }
 
 permitWritingToAll(){
