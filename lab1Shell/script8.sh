@@ -34,11 +34,12 @@ changeDirectory(){
 } 
 
 createFile(){
+	echo $1
 	if [ -e "$1" ]; then
-		echo -e "$RED Error: file already exists $NC" 1>&2
+		echo -e "${RED}Error: file already exists $NC" 1>&2
 		return
 	fi
-	touch "$1" >&2
+	touch -- "$1" 2>> ~/lab1_err 
 }
 
 permitWritingToAll(){
@@ -61,8 +62,9 @@ mainLoop(){
 			;;
 		3) 	echo "Enter file name"
 			read file_name
+			echo $file_name
 			if [ -n "$file_name" ]; then
-				createFile $file_name
+				createFile "$file_name"
 			fi
 			;;
 		4) echo "Enter file name"
