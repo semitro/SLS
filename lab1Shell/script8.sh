@@ -3,13 +3,14 @@
 RED='\033[1;31m'
 NC='\033[0m'
 
-function catch_kill {
+catchKill(){
 	echo "The mafia was killed"
 	exit 0
 }
 
-trap  "catch_kill" SIGINT
-function printMenu {
+trap  "catchKill" SIGINT
+
+printMenu(){
 	echo '1 - print name of current directory
 2 - change current directory
 3 - create file
@@ -18,12 +19,12 @@ function printMenu {
 6 - exit'
 }
 
-function printCurrentDirectoryName {
+printCurrentDirectoryName(){
 	echo `pwd | gawk -F '/' ' {print $NF}'`
 }
 
 
-function changeDirectory {
+changeDirectory(){
 	cd -- "$1" 2>> ~/lab1_err
 	if [ $? -ne 0 ]
 	then
@@ -32,7 +33,7 @@ function changeDirectory {
 	fi
 } 
 
-function createFile {
+createFile(){
 	if [ -e "$1" ]; then
 		echo -e "$RED Error: file already exists $NC" 1>&2
 		return
@@ -40,11 +41,11 @@ function createFile {
 	touch "$1" >&2
 }
 
-function permitWritingToAll {
+permitWritingToAll(){
 	chmod a+w "$1" >&2
 }
 
-function mainLoop {
+mainLoop(){
 	printMenu
 	while read chosen_menu 
 	do
