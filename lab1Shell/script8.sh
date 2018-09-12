@@ -25,7 +25,7 @@ printCurrentDirectoryName(){
 
 
 changeDirectory(){
-	cd -- "$1" 2>> ~/lab1_err
+	( cd -- "$1" 2>> ~/lab1_err )
 	if [ $? -ne 0 ]
 	then
 		#echo -e "${RED}An error has ocurred$NC" 1>&2
@@ -54,15 +54,9 @@ mainLoop(){
 			;;
 		2) echo "where would you like to go? deeper?"
 			read file_name
-			if [ ! -z "$file_name" ]
-			then
-		       		changeDirectory $file_name
-			else
-				cd 2>> ~/lab1_err 
-				if [ $? -ne 0 ]
-				then
-				echo "An error has ocurred" 1>&2
-				fi
+			if [ -n "$file_name" ]
+		 	then	
+				changeDirectory $file_name
 			fi
 			;;
 		3) 	echo "Enter file name"
