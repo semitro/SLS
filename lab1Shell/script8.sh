@@ -2,7 +2,8 @@
 
 RED='\033[1;31m'
 NC='\033[0m'
-
+err_file=$(echo ~/lab1_err)
+echo $err_file
 catchKill(){
 	echo "The mafia was killed"
 	exit 0
@@ -20,13 +21,15 @@ printMenu(){
 }
 
 printCurrentDirectoryName(){
-	pwd -P 2>> ~/lab1_err || echo ":(" >&2
-	#echo `pwd | gawk -F '/' ' {print $NF}'` || echo ":(" >&2
+	pwd -P 2>$err_file || echo ":(" >&2
 }
 
+printError(){
+	echo -e "${RED}Error:$1$NC" 1>&2
+}
 
 changeDirectory(){
- 	( cd -- "$1" 2>> ~/lab1_err )
+ 	( cd -- "$1" 2>> $err_file )
 	if [ $? -ne 0 ]
 	then
 		#echo -e "${RED}An error has ocurred$NC" 1>&2
@@ -39,17 +42,17 @@ changeDirectory(){
 createFile(){
 	echo $1
 	if [ -e "$1" ]; then
-		echo -e "${RED}Error: file already exists $NC" 1>&2
+		printError "file already exists"
 		return
 	fi
-	touch -- "$1" 2>> ~/lab1_err 
+	touch -- "$1" 2>> $err_file
 	if [ -n $? ]; then
 		echo "Eroor" 1>&2
 	fi
 }
 
 permitWritingToAll(){
-	chmod a+w "$1" >&2
+	chmod a+w "$1" >&2 2>> $err_file
 }
 
 destroyFile(){
@@ -62,13 +65,14 @@ destroyFile(){
 	echo "rm: remove $1 (да/нет)?" >&5 
 	read confirm
 	if [ "да" = "$confirm" ] || [ "yes" = "$confirm" ] || [ "y" = "$confirm" ]; then	
-		 rm  -- "$1" 2>> ~/lab1_err  || echo ":(" 
+		 rm  -- "$1" 2>> $err_file || echo ":(" 
 		 if ! [ $0 -eq 0 ]; then
 			echo "no." 1>&2
 		fi
 
 	fi
 }
+
 mainLoop(){
 	export IFS=""
 	printMenu
