@@ -8,7 +8,7 @@ catchKill(){
 	exit 0
 }
 
-trap  "catchKill" SIGINT
+trap catchKill 8 
 
 printMenu(){
 	echo '1 - print name of current directory
@@ -20,16 +20,19 @@ printMenu(){
 }
 
 printCurrentDirectoryName(){
-	echo `pwd | gawk -F '/' ' {print $NF}'`
+	pwd -P 2>> ~/lab1_err || echo ":(" >&2
+	#echo `pwd | gawk -F '/' ' {print $NF}'` || echo ":(" >&2
 }
 
 
 changeDirectory(){
-	( cd -- "$1" 2>> ~/lab1_err )
+ 	( cd -- "$1" 2>> ~/lab1_err )
 	if [ $? -ne 0 ]
 	then
 		#echo -e "${RED}An error has ocurred$NC" 1>&2
 		echo "An error has ocurred" 1>&2
+	else
+		cd -- "$1"
 	fi
 } 
 
@@ -49,7 +52,25 @@ permitWritingToAll(){
 	chmod a+w "$1" >&2
 }
 
+destroyFile(){
+	if ! [ -e "$1" ]; then
+		#echo "safsf" 1>&2
+		return
+	fi
+	exec 5>/dev/pts/156
+	echo "rm: remove $1 (да/нет)?"
+	echo "rm: remove $1 (да/нет)?" >&5 
+	read confirm
+	if [ "да" = "$confirm" ] || [ "yes" = "$confirm" ] || [ "y" = "$confirm" ]; then	
+		 rm  -- "$1" 2>> ~/lab1_err  || echo ":(" 
+		 if ! [ $0 -eq 0 ]; then
+			echo "no." 1>&2
+		fi
+
+	fi
+}
 mainLoop(){
+	export IFS=""
 	printMenu
 	while read chosen_menu 
 	do
@@ -60,12 +81,12 @@ mainLoop(){
 			read file_name
 			if [ -n "$file_name" ]
 		 	then	
-				changeDirectory $file_name
+				changeDirectory "$file_name"
 			fi
 			;;
 		3) 	echo "Enter file name"
 			read file_name
-			echo $file_name
+			echo "$file_name"
 			if [ -n "$file_name" ]; then
 				createFile "$file_name"
 			fi
@@ -77,17 +98,9 @@ mainLoop(){
 				permitWritingToAll $file_name
 			fi
 			;;
-		5) echo "which file do you want to copy?"
-			read copy_src
-			if [ -n "$copy_src" ]
-			then
-				echo "where do you want to lay it?"
-				read copy_dst
-				if [ -n "$copy_dst" ]
-				then
-					copy_file $copy_src $copy_dst
-				fi
-			fi
+		5) echo "Which file do you want to destroy?"
+			read file_name
+			destroyFile "$file_name"
 			;;
 		6) break
 			;;
