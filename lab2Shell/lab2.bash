@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# See the task at https://se.ifmo.ru/~dima/unix/2.html
+
 # spaces in the names!
 # 1.1
 # $1 - file name
@@ -24,13 +26,23 @@ printUsersInGroupsMoreThan(){
 # 1.1
 # $1 - dir where another dirs is place
 printDirsOfDir(){
-	dirs=$(ls -l -- "$1" | grep ^d | awk '{for(i=9; i<=NF; i++) printf("%s ",$i); print "" }')
+	# awk gets name ( cases of spaces are handled)
+	dirs=$(ls -lt -- "$1" | grep ^d \
+		| awk '{for(i=9; i<=NF; i++) printf("%s ",$i); print "" }' | sed 's/.$//')
+	#(	>&2 echo "$dirs" )
 	echo "$dirs"
 }
 
 getDirsWhereIsNoMoreThanOneSubdir(){
 	dirs=$(printDirsOfDir ".")
-	echo "$dirs"
+	IFS=$'\n'
+	for subdir in $dirs; do
+		subSubDirs=$(printDirsOfDir "$subdir")
+		subDirsQuantity=$(echo "$subSubDirs" | grep -v '^$' | wc -l)
+		if [ $subDirsQuantity -gt 1 ]; then
+			echo "$subdir"
+		fi
+	done
 }
 
 # 2.2
