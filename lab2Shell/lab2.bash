@@ -16,3 +16,16 @@ printUsersInGroupsMoreThan(){
 }
 
 
+# 2.2
+# $1 - num of users
+getGroupsWithMoreThanNUsers(){
+	
+	v=`getent group | awk -F: '{print $1}' ` 
+	for i in $v ; do
+		if [ $(printUsersInGroup "$i" | wc -l) -gt $1 ] ; then
+			echo $i
+		fi
+	done
+}
+
+getGroupsWithMoreThanNUsers 5 
